@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="name">
+        <item>马云</item>
+        <item>朱元璋</item>
+        <item>成吉思汗</item>
+        <item>奥巴马</item>
+        <item>屠呦呦</item>
+        <item>贝克汉姆</item>
+        <item>史泰龙</item>
+        <item>韩寒</item>
+        <item>邓超</item>
+        <item>普京</item>
+        <item>拿破仑</item>
+        <item>岳飞</item>
+        <item>花木兰</item>
+        <item>炎亚纶</item>
+        <item>吴尊</item>
+        <item>汪东城</item>
+        <item>辰亦儒</item>
+        <item>张学友 </item>
+        <item>周润发</item>
+        <item>王力宏</item>
+        <item>古巨基</item>
+        <item>潘粤明 </item>
+        <item>胡兵</item>
+        <item>欧阳震华</item>
+        <item>陈冠希</item>
+        <item>谢霆锋</item>
+        <item>张国荣</item>
+        <item>张翰</item>
+        <item>魏晨</item>
+        <item>朱梓骁</item>
+    </string-array>
+
+    <string-array name="img">
+        <item>http://7xi8d6.com1.z0.glb.clouddn.com/20171025112955_lmesMu_katyteiko_25_10_2017_11_29_43_270.jpeg</item>
+        <item>http://7xi8d6.com1.z0.glb.clouddn.com/20171024083526_Hq4gO6_bluenamchu_24_10_2017_8_34_28_246.jpeg</item>
+        <item>https://img.gank.io/anri.kumaki_23_10_2017_12_27_30_151.jpg</item>
+        <item>http://7xi8d6.com1.z0.glb.clouddn.com/20171018091347_Z81Beh_nini.nicky_18_10_2017_9_13_35_727.jpeg</item>
+        <item>http://7xi8d6.com1.z0.glb.clouddn.com/20171012073213_p4H630_joycechu_syc_12_10_2017_7_32_7_433.jpeg</item>
+        <item>http://7xi8d6.com1.z0.glb.clouddn.com/20171012073108_0y12KR_anri.kumaki_12_10_2017_7_30_58_141.jpeg</item>
+        <item>https://ws1.sinaimg.cn/large/610dc034ly1fiuiw5givwj20u011h79a.jpg</item>
+        <item>http://7xi8d6.com1.z0.glb.clouddn.com/2017-10-10-sakura.gun_10_10_2017_12_33_34_751.jpg</item>
+        <item>http://7xi8d6.com1.z0.glb.clouddn.com/2017-10-31-nozomisasaki_official_31_10_2017_10_49_17_24.jpg</item>
+        <item>http://7xi8d6.com1.z0.glb.clouddn.com/20171228085004_5yEHju_Screenshot.jpeg</item>
+        <item>http://7xi8d6.com1.z0.glb.clouddn.com/20180102083655_3t4ytm_Screenshot.jpeg</item>
+        <item>http://7xi8d6.com1.z0.glb.clouddn.com/20171227115959_lmlLZ3_Screenshot.jpeg</item>
+        <item>http://7xi8d6.com1.z0.glb.clouddn.com/20171219224721_wFH5PL_Screenshot.jpeg</item>
+        <item>http://7xi8d6.com1.z0.glb.clouddn.com/20171219115747_tH0TN5_Screenshot.jpeg</item>
+        <item>http://7xi8d6.com1.z0.glb.clouddn.com/20171212083612_WvLcTr_Screenshot.jpeg</item>
+        <item>http://7xi8d6.com1.z0.glb.clouddn.com/20171211082435_CCblJd_Screenshot.jpeg</item>
+        <item>https://ws1.sinaimg.cn/large/610dc034ly1fj78mpyvubj20u011idjg.jpg</item>
+        <item>https://ws1.sinaimg.cn/large/610dc034ly1fiz4ar9pq8j20u010xtbk.jpg</item>
+        <item>http://7xi8d6.com1.z0.glb.clouddn.com/20171126223118_jeCYtY_chayexiaoguo_apple_26_11_2017_22_30_59_409.jpeg</item>
+        <item>https://ws1.sinaimg.cn/large/610dc034ly1fivohbbwlqj20u011idmx.jpg</item>
+        <item>https://ws1.sinaimg.cn/large/610dc034ly1fj2ld81qvoj20u00xm0y0.jpg</item>
+        <item>http://7xi8d6.com1.z0.glb.clouddn.com/2017-11-17-22794158_128707347832045_9158114204975104000_n.jpg</item>
+        <item>https://ws1.sinaimg.cn/large/610dc034ly1fj3w0emfcbj20u011iabm.jpg</item>
+        <item>https://ws1.sinaimg.cn/large/610dc034ly1fjxu5qqdjoj20qo0xc0wk.jpg</item>
+        <item>https://ws1.sinaimg.cn/large/610dc034ly1fk05lf9f4cj20u011h423.jpg</item>
+        <item>https://ws1.sinaimg.cn/large/610dc034ly1fjs25xfq48j20u00mhtb6.jpg</item>
+        <item>https://ws1.sinaimg.cn/large/610dc034ly1fjfae1hjslj20u00tyq4x.jpg</item>
+        <item>https://ws1.sinaimg.cn/large/610dc034ly1fjppsiclufj20u011igo5.jpg</item>
+        <item>https://ws1.sinaimg.cn/large/610dc034ly1fjndz4dh39j20u00u0ada.jpg</item>
+        <item>https://ws1.sinaimg.cn/large/610dc034ly1fjgfyxgwgnj20u00gvgmt.jpg</item>
+
+    </string-array>
+    
+</resources>

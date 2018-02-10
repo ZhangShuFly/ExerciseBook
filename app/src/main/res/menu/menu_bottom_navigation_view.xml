@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.ilyzs.exercisebook.MainActivity">
+
+    <item
+        android:id="@+id/menu_index"
+        android:title="首页"
+        android:icon="@drawable/index"/>
+
+    <item android:id="@+id/menu_idea" android:title="@string/idea" android:icon="@drawable/idea"/>
+    <item android:id="@+id/menu_market" android:title="@string/market" android:icon="@drawable/market"/>
+    <item android:id="@+id/menu_notice" android:title="@string/notice" android:icon="@drawable/notice"/>
+</menu>
