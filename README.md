@@ -1,10 +1,16 @@
 ## 包含内容
 
-#### 1 基于CoordinatorLayout的页面布局
+#### 2 MVP  
+
+![MVP结构图](asserts/MVP.svg)
+
+#### 2 基于CoordinatorLayout的页面布局
 
  2.1 布局代码结构
  
   参考[activity_main.xml](app/src/main/res/layout/activity_main.xml)
+ 
+ <DrawerLayout>
  
     <CoordinatorLayout>
     
@@ -28,11 +34,19 @@
         
         </ViewPager>
         
+        <!--底部工具栏-->
+        <BottomNavigationView></BottomNavigationView>
+        
         <!-- 浮动工具栏 -->
         <FloatingActionButton> </FloatingActionBar>
     
     </CoordinatorLayout>
 
+    <!--抽屉菜单-->
+    <NavigationView></NavigationView>
+    
+ </DrawerLayout>
+  
  2.2 组件
  
  2.2.1 CoordinatorLayout
@@ -130,8 +144,10 @@
     
     浮动框，点击之后通过Snackbar弹出提示消息，自身随之向上移动。
 
-#### 2 MVP  
-    
-#### 3 MVVM
+  2.2.9 BottomNavigationView
+  
+    底部菜单
+  
+  2.3.0 NavigationView
 
-#### 4 WebView
+    抽屉菜单

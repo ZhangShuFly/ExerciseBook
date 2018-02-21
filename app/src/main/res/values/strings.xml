@@ -105,4 +105,6 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="navigation_drawer">Navigation Drawer</string>
+
+    <string name="api_error_msg">系统错误</string>
 </resources>

@@ -121,11 +121,14 @@ public class MainActivity extends BaseActivity {
 
         @Override
         public Fragment getItem(int position) {
-            if (1 == position) {
-                return FallsFragment.newInstance(String.valueOf(position));
+            if (0== position) {
+                return FallsFragment.newInstance(String.valueOf(position+1));
+            }else if(1 == position){
+                return ListFragment.newInstance(position+1);
+            }else if(2 == position  ){
+                return FallsFragment.newInstance(String.valueOf(position+1));
             }
-
-            return ListFragment.newInstance(position + 1);
+                return null;
         }
 
         @Override

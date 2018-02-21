@@ -22,6 +22,9 @@ import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.bumptech.glide.request.RequestOptions;
 import com.github.clans.fab.FloatingActionMenu;
 import com.ilyzs.exercisebook.R;
+import com.ilyzs.exercisebook.base.BaseFragment;
+import com.ilyzs.exercisebook.presenter.ImageDataPresenter;
+import com.ilyzs.exercisebook.view.ImageDataView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -31,7 +34,7 @@ import butterknife.Unbinder;
  * Created by zhangshu on 2018/1/6.
  */
 
-public class ListFragment extends Fragment {
+public class ListFragment extends BaseFragment implements ImageDataView{
     private static final String ARG_SECTION_NUMBER = "section_number";
     private Unbinder unbinder;
     private RecyclerViewAdapter adapter;
@@ -41,6 +44,7 @@ public class ListFragment extends Fragment {
     @BindView(R.id.recycler_view)
     public RecyclerView recyclerView;
     private FloatingActionMenu fabMenu;
+    private ImageDataPresenter presenter;
 
     public ListFragment() {
 
@@ -57,17 +61,40 @@ public class ListFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         data = getResources().getStringArray(R.array.name);
-        imgUrl = getResources().getStringArray(R.array.img);
         adapter = new RecyclerViewAdapter();
+
+        presenter = new ImageDataPresenter();
+        presenter.attachView(this);
+
+        presenter.getData("",getResources().getStringArray(R.array.img));
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-        unbinder = ButterKnife.bind(this, rootView);
-        return rootView;
+    public void onStart() {
+        super.onStart();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        presenter.detachView();
+    }
+
+    @Override
+    public int getContentViewId() {
+        return R.layout.fragment_main;
+    }
+
+    @Override
+    public void initAllMembersView(Bundle saveInstanceState) {
+        unbinder = ButterKnife.bind(this, mView);
     }
 
     @Override
@@ -109,6 +136,12 @@ public class ListFragment extends Fragment {
         unbinder.unbind();
     }
 
+    @Override
+    public void showData(String[] data) {
+        this.imgUrl = data;
+        adapter.notifyDataSetChanged();
+    }
+
     static class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
         private Context context;
 
@@ -123,12 +156,14 @@ public class ListFragment extends Fragment {
         public void onBindViewHolder(ViewHolder holder, int position) {
             holder.tv.setText(data[position]);
             RequestOptions options = new RequestOptions().bitmapTransform(new CircleCrop()).placeholder(R.drawable.loading).error(R.drawable.loadfail).priority(Priority.NORMAL).diskCacheStrategy(DiskCacheStrategy.ALL);
-            Glide.with(context).load(imgUrl[position]).apply(options).into(holder.iv);
+            if (null != imgUrl && null != imgUrl[position] ) {
+                Glide.with(context).load(imgUrl[position]).apply(options).into(holder.iv);
+            }
         }
 
         @Override
         public int getItemCount() {
-            return data.length;
+            return  null!=data?data.length:0;
         }
 
         static class ViewHolder extends RecyclerView.ViewHolder {

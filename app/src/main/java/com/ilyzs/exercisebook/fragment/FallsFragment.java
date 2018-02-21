@@ -1,11 +1,7 @@
 package com.ilyzs.exercisebook.fragment;
 
 import android.content.Context;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
@@ -18,27 +14,25 @@ import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.RequestOptions;
-import com.bumptech.glide.request.target.SimpleTarget;
-import com.bumptech.glide.request.transition.Transition;
 import com.ilyzs.exercisebook.R;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.ilyzs.exercisebook.base.BaseFragment;
+import com.ilyzs.exercisebook.presenter.ImageDataPresenter;
+import com.ilyzs.exercisebook.view.ImageDataView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
 
-public class FallsFragment extends Fragment {
+public class FallsFragment extends BaseFragment implements ImageDataView{
 
     private Unbinder unbinder;
     private RecyclerViewAdapter adapter;
-
     private static String[] data;
 
     @BindView(R.id.recycler_view)
     RecyclerView recyclerView;
+    private ImageDataPresenter presenter;
 
     public FallsFragment() {
     }
@@ -57,21 +51,41 @@ public class FallsFragment extends Fragment {
         if (getArguments() != null) {
             String param1 = getArguments().getString("param1");
         }
-        data = getResources().getStringArray(R.array.img);
-
         adapter = new RecyclerViewAdapter();
+
+        presenter = new ImageDataPresenter();
+        presenter.attachView(this);
+
+        presenter.getData("",getResources().getStringArray(R.array.img));
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_falls, container, false);
-        unbinder = ButterKnife.bind(this,view);
+    public void onStart() {
+        super.onStart();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        presenter.detachView();
+    }
+
+    @Override
+    public int getContentViewId() {
+        return R.layout.fragment_falls;
+    }
+
+    @Override
+    public void initAllMembersView(Bundle saveInstanceState) {
+        unbinder = ButterKnife.bind(this,mView);
 
         recyclerView.setLayoutManager(new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL));
         recyclerView.setAdapter(adapter);
-
-        return view;
     }
 
     @Override
@@ -88,6 +102,12 @@ public class FallsFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
+    }
+
+    @Override
+    public void showData(String[] data) {
+        this.data = data;
+        adapter.notifyDataSetChanged();
     }
 
     static class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder>{
@@ -111,7 +131,7 @@ public class FallsFragment extends Fragment {
 
         @Override
         public int getItemCount() {
-            return data.length;
+            return  null!=data?data.length:0;
         }
 
          static class ViewHolder extends RecyclerView.ViewHolder{
