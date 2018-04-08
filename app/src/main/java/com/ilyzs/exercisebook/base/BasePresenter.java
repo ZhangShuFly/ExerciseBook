@@ -1,19 +1,22 @@
 package com.ilyzs.exercisebook.base;
 
+import java.lang.ref.Reference;
+import java.lang.ref.WeakReference;
+
 /**
  * Created by zhangshu on 2018/2/20.
  */
 
-public class BasePresenter<V extends BaseView> {
+public abstract class BasePresenter<V extends BaseView> {
 
-    private V mView;
+    private Reference<V> mViewRef;
 
     /**
      * 绑定view
      * @param mapView
      */
     public void attachView(V mapView) {
-        this.mView = mapView;
+        this.mViewRef = new WeakReference<V>( mapView);
     }
 
     /**
@@ -21,14 +24,17 @@ public class BasePresenter<V extends BaseView> {
      * @return
      */
     public V getMView() {
-        return mView;
+        return mViewRef.get();
     }
 
     /**
      * 断开view
      */
     public void detachView(){
-        this.mView = null;
+        if(mViewRef!=null){
+            mViewRef.clear();
+            mViewRef = null;
+        }
     }
 
     /**
@@ -36,6 +42,9 @@ public class BasePresenter<V extends BaseView> {
      * @return
      */
     public boolean isViewAttach(){
-        return mView != null;
+        return mViewRef != null && mViewRef.get()!=null;
     }
+
+    //公用的方法，示范
+    public abstract void showData();
 }

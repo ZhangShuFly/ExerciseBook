@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.NavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.util.AttributeSet;
 import android.view.Menu;
@@ -18,6 +19,8 @@ import com.ilyzs.exercisebook.NavigationDrawerActivity;
 import com.ilyzs.exercisebook.R;
 import com.ilyzs.exercisebook.ScrollingActivity;
 
+import butterknife.BindView;
+
 /**
  * Created by zhangshu on 2018/1/6.
  */
@@ -25,6 +28,9 @@ import com.ilyzs.exercisebook.ScrollingActivity;
 public class BaseActivity extends AppCompatActivity implements BaseView{
 
     private ProgressDialog progressDialog;
+
+    @BindView(R.id.nav_view)
+    NavigationView navigationView;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -52,11 +58,13 @@ public class BaseActivity extends AppCompatActivity implements BaseView{
         super.onCreate(savedInstanceState);
         progressDialog = new ProgressDialog(this);
         progressDialog.setCancelable(false);
+
+
     }
 
     @Override
     public void showLoading() {
-        if(!progressDialog.isShowing()){
+        if(null!=progressDialog && !progressDialog.isShowing()){
             progressDialog.show();
         }
     }

@@ -5,13 +5,16 @@ import com.ilyzs.exercisebook.model.ImageDataModel;
 import com.ilyzs.exercisebook.util.DataCallBack;
 import com.ilyzs.exercisebook.view.ImageDataView;
 
+import java.util.List;
+import java.util.Map;
+
 /**
  * Created by zhangshu on 2018/2/20.
  */
 
 public class ImageDataPresenter extends BasePresenter<ImageDataView> {
 
-    public void getData(String params,String[] resultData){
+    public void getData(String params){
 
         //如果没有View引用就不加载数据
         if(!isViewAttach()){
@@ -19,14 +22,15 @@ public class ImageDataPresenter extends BasePresenter<ImageDataView> {
         }
 
         //显示正在加载进度条
+        if("0".equals(params))
         getMView().showLoading();
 
         // 调用Model请求数据
-        ImageDataModel.getData(params, new DataCallBack<String[]>() {
+        ImageDataModel.getData(params, new DataCallBack<List<Map<String,String>>>() {
             @Override
-            public void onSuccess(String[] data) {
+            public void onSuccess(List<Map<String,String>> list) {
                 if(isViewAttach())
-                getMView().showData(data);
+                getMView().showData(list);
             }
 
             @Override
@@ -46,8 +50,12 @@ public class ImageDataPresenter extends BasePresenter<ImageDataView> {
                 if (isViewAttach())
                 getMView().hideLoading();
             }
-        },resultData);
+        });
 
     }
 
+    @Override
+    public void showData() {
+
+    }
 }

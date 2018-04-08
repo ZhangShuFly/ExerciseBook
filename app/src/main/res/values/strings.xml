@@ -107,4 +107,6 @@
     <string name="navigation_drawer">Navigation Drawer</string>
 
     <string name="api_error_msg">系统错误</string>
+    <string name="recycleview_header">I am Header</string>
+    <string name="title_mpandroid_chart">MPAndroidChart Demo</string>
 </resources>

@@ -8,4 +8,10 @@
     tools:context="com.ilyzs.exercisebook.NavigationDrawerActivity"
     tools:showIn="@layout/app_bar_navigation_drawer">
 
+
+        <com.github.mikephil.charting.charts.LineChart
+            android:id="@+id/line_chart"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"></com.github.mikephil.charting.charts.LineChart>
+
 </android.support.constraint.ConstraintLayout>

@@ -2,12 +2,14 @@ package com.ilyzs.exercisebook.view;
 
 import com.ilyzs.exercisebook.base.BaseView;
 
+import java.util.List;
+
 /**
  * Created by zhangshu .
  */
 
-public interface ImageDataView   extends BaseView{
+public interface ImageDataView<T>   extends BaseView{
 
-    void showData(String[] Data);
+    void showData(List<T> Data);
 
 }

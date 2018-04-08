@@ -12,7 +12,7 @@ import android.view.ViewGroup;
  * Created by zhangshu on 2018/2/20.
  */
 
-public abstract class BaseFragment extends Fragment implements BaseView{
+public abstract class BaseFragment<P extends BasePresenter> extends Fragment implements BaseView{
 
     protected View mView;
 
@@ -22,6 +22,15 @@ public abstract class BaseFragment extends Fragment implements BaseView{
 
     private Context context;
 
+    protected P mPresenter;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mPresenter = createPresenter();
+        if(null!=mPresenter)
+        mPresenter.attachView(this);
+    }
 
     @Nullable
     @Override
@@ -31,6 +40,15 @@ public abstract class BaseFragment extends Fragment implements BaseView{
        initAllMembersView(savedInstanceState);
        return mView;
     }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if(null!=mPresenter)
+            mPresenter.detachView();
+    }
+
+    public abstract P createPresenter();
 
     @Override
     public void showLoading() {

@@ -3,7 +3,6 @@ package com.ilyzs.exercisebook.fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -11,7 +10,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -25,6 +23,12 @@ import com.ilyzs.exercisebook.R;
 import com.ilyzs.exercisebook.base.BaseFragment;
 import com.ilyzs.exercisebook.presenter.ImageDataPresenter;
 import com.ilyzs.exercisebook.view.ImageDataView;
+import com.jcodecraeer.xrecyclerview.ProgressStyle;
+import com.jcodecraeer.xrecyclerview.XRecyclerView;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -34,17 +38,17 @@ import butterknife.Unbinder;
  * Created by zhangshu on 2018/1/6.
  */
 
-public class ListFragment extends BaseFragment implements ImageDataView{
+public class ListFragment extends BaseFragment<ImageDataPresenter> implements ImageDataView<Map<String,String>>{
     private static final String ARG_SECTION_NUMBER = "section_number";
     private Unbinder unbinder;
     private RecyclerViewAdapter adapter;
-    private static String[] data;
-    private static String[] imgUrl;
+    private static List<Map<String,String>> list;
 
     @BindView(R.id.recycler_view)
-    public RecyclerView recyclerView;
+    public XRecyclerView recyclerView;
     private FloatingActionMenu fabMenu;
-    private ImageDataPresenter presenter;
+
+    private int loadIndex, pullIndex,nowIndex;
 
     public ListFragment() {
 
@@ -61,14 +65,9 @@ public class ListFragment extends BaseFragment implements ImageDataView{
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        data = getResources().getStringArray(R.array.name);
+        list = new ArrayList<>();
         adapter = new RecyclerViewAdapter();
-
-        presenter = new ImageDataPresenter();
-        presenter.attachView(this);
-
-        presenter.getData("",getResources().getStringArray(R.array.img));
+        mPresenter.getData("0");
     }
 
     @Override
@@ -82,12 +81,6 @@ public class ListFragment extends BaseFragment implements ImageDataView{
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
-        presenter.detachView();
-    }
-
-    @Override
     public int getContentViewId() {
         return R.layout.fragment_main;
     }
@@ -95,6 +88,25 @@ public class ListFragment extends BaseFragment implements ImageDataView{
     @Override
     public void initAllMembersView(Bundle saveInstanceState) {
         unbinder = ButterKnife.bind(this, mView);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
+        recyclerView.setAdapter(adapter);
+
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.addItemDecoration(new DividerItemDecoration(this.getContext(), DividerItemDecoration.HORIZONTAL));
+
+        recyclerView.setPullRefreshEnabled(true);
+        recyclerView.setLoadingMoreEnabled(true);
+        recyclerView.setRefreshProgressStyle(ProgressStyle.BallSpinFadeLoader);
+        recyclerView.setLoadingMoreProgressStyle(ProgressStyle.Pacman);
+        recyclerView.getDefaultRefreshHeaderView().setRefreshTimeVisible(true);
+
+        //View header =   LayoutInflater.from(getActivity()).inflate(R.layout.recyclerview_header, (ViewGroup)(getActivity().findViewById(android.R.id.content)),false);
+        //recyclerView.addHeaderView(header);
+    }
+
+    @Override
+    public ImageDataPresenter createPresenter() {
+        return  new ImageDataPresenter();
     }
 
     @Override
@@ -106,12 +118,22 @@ public class ListFragment extends BaseFragment implements ImageDataView{
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
-        recyclerView.setAdapter(adapter);
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
-        recyclerView.addItemDecoration(new DividerItemDecoration(this.getContext(), DividerItemDecoration.HORIZONTAL));
 
-        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+        recyclerView.setLoadingListener(new XRecyclerView.LoadingListener() {
+            @Override
+            public void onRefresh() {
+                nowIndex = --pullIndex;
+                mPresenter.getData(String.valueOf(nowIndex));
+            }
+
+            @Override
+            public void onLoadMore() {
+                nowIndex = ++loadIndex;
+                mPresenter.getData(String.valueOf(nowIndex));
+            }
+        });
+
+/*        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
@@ -127,7 +149,7 @@ public class ListFragment extends BaseFragment implements ImageDataView{
                 super.onScrolled(recyclerView, dx, dy);
 
             }
-        });
+        });*/
     }
 
     @Override
@@ -137,9 +159,24 @@ public class ListFragment extends BaseFragment implements ImageDataView{
     }
 
     @Override
-    public void showData(String[] data) {
-        this.imgUrl = data;
+    public void showData(List<Map<String,String>> list) {
+        if(nowIndex>=0){
+            this.list.addAll(list);
+        }else{
+            this.list.addAll(0,list);
+        }
+        recyclerView.loadMoreComplete();
+        recyclerView.refreshComplete();
         adapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if(recyclerView!=null){
+            recyclerView.destroy();
+            recyclerView = null;
+        }
     }
 
     static class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
@@ -154,16 +191,14 @@ public class ListFragment extends BaseFragment implements ImageDataView{
 
         @Override
         public void onBindViewHolder(ViewHolder holder, int position) {
-            holder.tv.setText(data[position]);
+            holder.tv.setText(list.get(position).get("name"));
             RequestOptions options = new RequestOptions().bitmapTransform(new CircleCrop()).placeholder(R.drawable.loading).error(R.drawable.loadfail).priority(Priority.NORMAL).diskCacheStrategy(DiskCacheStrategy.ALL);
-            if (null != imgUrl && null != imgUrl[position] ) {
-                Glide.with(context).load(imgUrl[position]).apply(options).into(holder.iv);
-            }
+            Glide.with(context).load(list.get(position).get("url")).apply(options).into(holder.iv);
         }
 
         @Override
         public int getItemCount() {
-            return  null!=data?data.length:0;
+            return  null!=list?list.size():0;
         }
 
         static class ViewHolder extends RecyclerView.ViewHolder {

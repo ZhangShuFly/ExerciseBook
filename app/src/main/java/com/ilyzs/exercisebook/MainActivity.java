@@ -1,6 +1,11 @@
 package com.ilyzs.exercisebook;
 
 import android.animation.ObjectAnimator;
+import android.app.job.JobInfo;
+import android.app.job.JobScheduler;
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -15,15 +20,17 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
-import android.view.Gravity;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
-import com.github.clans.fab.FloatingActionButton;
-import com.github.clans.fab.FloatingActionMenu;
 import com.ilyzs.exercisebook.base.BaseActivity;
 import com.ilyzs.exercisebook.fragment.FallsFragment;
 import com.ilyzs.exercisebook.fragment.ListFragment;
+import com.ilyzs.exercisebook.fragment.WebViewFragment;
+import com.ilyzs.exercisebook.service.JobSchedulerService;
+import com.ilyzs.exercisebook.service.TestService;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -49,10 +56,23 @@ public class MainActivity extends BaseActivity {
     @BindView(R.id.nav_view)
     NavigationView navigationView;
 
+    private static final String TAG = "MainActivity";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        startService(new Intent(this, TestService.class));
+
+        JobScheduler jobScheduler  = (JobScheduler) getSystemService(Context.JOB_SCHEDULER_SERVICE);
+        JobInfo.Builder builder = new JobInfo.Builder(1,new ComponentName(getPackageName(), JobSchedulerService.class.getName()));
+        builder.setOverrideDeadline(5000).setMinimumLatency(3000);
+
+
+        if(jobScheduler.schedule(builder.build()) == JobScheduler.RESULT_FAILURE ) {
+            Log.e(TAG, "onCreate: jobScheduler is error");
+        }
 
         ButterKnife.bind(this);
 
@@ -96,6 +116,11 @@ public class MainActivity extends BaseActivity {
         }
     }
 
+    @Override
+    protected void onResumeFragments() {
+        super.onResumeFragments();
+    }
+
     private void open(View view) {
         ObjectAnimator animator = ObjectAnimator.ofFloat(view, "rotation", 0, -355, -315);
         animator.setDuration(500);
@@ -124,9 +149,9 @@ public class MainActivity extends BaseActivity {
             if (0== position) {
                 return FallsFragment.newInstance(String.valueOf(position+1));
             }else if(1 == position){
-                return ListFragment.newInstance(position+1);
+                return WebViewFragment.newInstance("http://www.baidu.com");
             }else if(2 == position  ){
-                return FallsFragment.newInstance(String.valueOf(position+1));
+                return ListFragment.newInstance(position+1);
             }
                 return null;
         }

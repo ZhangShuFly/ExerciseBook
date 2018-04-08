@@ -2,6 +2,9 @@ package com.ilyzs.exercisebook.fragment;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
@@ -16,23 +19,31 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.RequestOptions;
 import com.ilyzs.exercisebook.R;
 import com.ilyzs.exercisebook.base.BaseFragment;
+import com.ilyzs.exercisebook.base.BasePresenter;
 import com.ilyzs.exercisebook.presenter.ImageDataPresenter;
 import com.ilyzs.exercisebook.view.ImageDataView;
+import com.jcodecraeer.xrecyclerview.ProgressStyle;
+import com.jcodecraeer.xrecyclerview.XRecyclerView;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
 
-public class FallsFragment extends BaseFragment implements ImageDataView{
+public class FallsFragment extends BaseFragment<ImageDataPresenter> implements ImageDataView<Map<String,String>>{
 
     private Unbinder unbinder;
     private RecyclerViewAdapter adapter;
-    private static String[] data;
+    private static List<Map<String,String>> list ;
 
     @BindView(R.id.recycler_view)
-    RecyclerView recyclerView;
-    private ImageDataPresenter presenter;
+    XRecyclerView recyclerView;
+
+    private int loadIndex, pullIndex,nowIndex;
 
     public FallsFragment() {
     }
@@ -48,15 +59,9 @@ public class FallsFragment extends BaseFragment implements ImageDataView{
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            String param1 = getArguments().getString("param1");
-        }
+        list = new ArrayList<>();
         adapter = new RecyclerViewAdapter();
-
-        presenter = new ImageDataPresenter();
-        presenter.attachView(this);
-
-        presenter.getData("",getResources().getStringArray(R.array.img));
+        mPresenter.getData("0");
     }
 
     @Override
@@ -70,12 +75,6 @@ public class FallsFragment extends BaseFragment implements ImageDataView{
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
-        presenter.detachView();
-    }
-
-    @Override
     public int getContentViewId() {
         return R.layout.fragment_falls;
     }
@@ -83,9 +82,40 @@ public class FallsFragment extends BaseFragment implements ImageDataView{
     @Override
     public void initAllMembersView(Bundle saveInstanceState) {
         unbinder = ButterKnife.bind(this,mView);
-
         recyclerView.setLayoutManager(new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL));
         recyclerView.setAdapter(adapter);
+
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.addItemDecoration(new DividerItemDecoration(this.getContext(), DividerItemDecoration.HORIZONTAL));
+
+        recyclerView.setPullRefreshEnabled(true);
+        recyclerView.setLoadingMoreEnabled(true);
+        recyclerView.setRefreshProgressStyle(ProgressStyle.BallZigZag);
+        recyclerView.setLoadingMoreProgressStyle(ProgressStyle.SquareSpin);
+    }
+
+    @Override
+    public ImageDataPresenter createPresenter() {
+        return new ImageDataPresenter();
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        recyclerView.setLoadingListener(new XRecyclerView.LoadingListener() {
+            @Override
+            public void onRefresh() {
+                nowIndex = --pullIndex;
+                mPresenter.getData(String.valueOf(nowIndex));
+            }
+
+            @Override
+            public void onLoadMore() {
+                nowIndex = ++loadIndex;
+                mPresenter.getData(String.valueOf(nowIndex));
+            }
+        });
     }
 
     @Override
@@ -105,8 +135,14 @@ public class FallsFragment extends BaseFragment implements ImageDataView{
     }
 
     @Override
-    public void showData(String[] data) {
-        this.data = data;
+    public void showData(List<Map<String,String>> list) {
+        if(nowIndex>=0){
+            this.list.addAll(list);
+        }else{
+            this.list.addAll(0,list);
+        }
+        recyclerView.loadMoreComplete();
+        recyclerView.refreshComplete();
         adapter.notifyDataSetChanged();
     }
 
@@ -126,12 +162,12 @@ public class FallsFragment extends BaseFragment implements ImageDataView{
         public void onBindViewHolder(final ViewHolder holder, int position) {
             //图片加载应该抽出来一个工具类，这里就简写类，可参考“Business”项目中的“ImageLoadUtil.class”
             RequestOptions options = new RequestOptions().placeholder(R.drawable.loading).error(R.drawable.loadfail).priority(Priority.NORMAL).centerCrop() .diskCacheStrategy(DiskCacheStrategy.ALL);
-            Glide.with(context).load(data[position]).apply(options).transition(new DrawableTransitionOptions().dontTransition()).into(holder.iv);
+            Glide.with(context).load(list.get(position).get("url")).apply(options).transition(new DrawableTransitionOptions().dontTransition()).into(holder.iv);
         }
 
         @Override
         public int getItemCount() {
-            return  null!=data?data.length:0;
+            return  list.size();
         }
 
          static class ViewHolder extends RecyclerView.ViewHolder{
