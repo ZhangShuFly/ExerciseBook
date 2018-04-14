@@ -21,16 +21,16 @@ public class ImageDataPresenter extends BasePresenter<ImageDataView> {
             return;
         }
 
-        //显示正在加载进度条
-        if("0".equals(params))
-        getMView().showLoading();
+                //显示正在加载进度条
+                if("0".equals(params))
+                    getMView().showLoading();
 
-        // 调用Model请求数据
-        ImageDataModel.getData(params, new DataCallBack<List<Map<String,String>>>() {
-            @Override
-            public void onSuccess(List<Map<String,String>> list) {
-                if(isViewAttach())
-                getMView().showData(list);
+                // 调用Model请求数据
+                ImageDataModel.getData(params, new DataCallBack<List<Map<String,String>>>() {
+                    @Override
+                    public void onSuccess(List<Map<String,String>> list) {
+                        if(isViewAttach())
+                            getMView().showData(list);
             }
 
             @Override

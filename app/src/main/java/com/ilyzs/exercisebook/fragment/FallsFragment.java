@@ -79,6 +79,7 @@ public class FallsFragment extends BaseFragment<ImageDataPresenter> implements I
         return R.layout.fragment_falls;
     }
 
+
     @Override
     public void initAllMembersView(Bundle saveInstanceState) {
         unbinder = ButterKnife.bind(this,mView);
@@ -136,6 +137,9 @@ public class FallsFragment extends BaseFragment<ImageDataPresenter> implements I
 
     @Override
     public void showData(List<Map<String,String>> list) {
+        if(null==recyclerView){
+            return;
+        }
         if(nowIndex>=0){
             this.list.addAll(list);
         }else{

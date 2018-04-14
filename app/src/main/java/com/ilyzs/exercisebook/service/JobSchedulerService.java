@@ -23,7 +23,7 @@ public class JobSchedulerService extends JobService {
         JobScheduler jobScheduler  = (JobScheduler) getSystemService(Context.JOB_SCHEDULER_SERVICE);
 
         JobInfo.Builder builder = new JobInfo.Builder(1,new ComponentName(getPackageName(), JobSchedulerService.class.getName()));
-        builder.setOverrideDeadline(10000).setMinimumLatency(5000);
+        builder.setOverrideDeadline(1000*60*10).setMinimumLatency(1000*60*5);
 
         if(jobScheduler.schedule(builder.build()) == JobScheduler.RESULT_FAILURE ) {
             Log.e(TAG, "onCreate: jobScheduler is error");

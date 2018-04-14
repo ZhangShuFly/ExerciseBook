@@ -7,6 +7,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,10 +24,13 @@ import com.ilyzs.exercisebook.R;
 import com.ilyzs.exercisebook.base.BaseFragment;
 import com.ilyzs.exercisebook.presenter.ImageDataPresenter;
 import com.ilyzs.exercisebook.view.ImageDataView;
+import com.jcodecraeer.xrecyclerview.ItemTouchHelperAdapter;
 import com.jcodecraeer.xrecyclerview.ProgressStyle;
+import com.jcodecraeer.xrecyclerview.SimpleItemTouchHelperCallback;
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -100,6 +104,11 @@ public class ListFragment extends BaseFragment<ImageDataPresenter> implements Im
         recyclerView.setLoadingMoreProgressStyle(ProgressStyle.Pacman);
         recyclerView.getDefaultRefreshHeaderView().setRefreshTimeVisible(true);
 
+        ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(adapter,recyclerView);
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(callback);
+        itemTouchHelper.attachToRecyclerView(recyclerView);
+
+
         //View header =   LayoutInflater.from(getActivity()).inflate(R.layout.recyclerview_header, (ViewGroup)(getActivity().findViewById(android.R.id.content)),false);
         //recyclerView.addHeaderView(header);
     }
@@ -160,6 +169,9 @@ public class ListFragment extends BaseFragment<ImageDataPresenter> implements Im
 
     @Override
     public void showData(List<Map<String,String>> list) {
+        if(null==recyclerView){
+            return;
+        }
         if(nowIndex>=0){
             this.list.addAll(list);
         }else{
@@ -179,7 +191,7 @@ public class ListFragment extends BaseFragment<ImageDataPresenter> implements Im
         }
     }
 
-    static class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
+    static class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> implements ItemTouchHelperAdapter {
         private Context context;
 
         @Override
@@ -199,6 +211,18 @@ public class ListFragment extends BaseFragment<ImageDataPresenter> implements Im
         @Override
         public int getItemCount() {
             return  null!=list?list.size():0;
+        }
+
+        @Override
+        public void onItemMove(int fromPosition, int toPosition) {
+                Collections.swap(list,fromPosition,toPosition);
+                notifyItemMoved(fromPosition,toPosition);
+        }
+
+        @Override
+        public void onItemDismiss(int position) {
+            list.remove(position-1);
+            notifyDataSetChanged();
         }
 
         static class ViewHolder extends RecyclerView.ViewHolder {

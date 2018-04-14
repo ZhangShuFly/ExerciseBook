@@ -18,6 +18,7 @@ import com.ilyzs.exercisebook.MainActivity;
 import com.ilyzs.exercisebook.NavigationDrawerActivity;
 import com.ilyzs.exercisebook.R;
 import com.ilyzs.exercisebook.ScrollingActivity;
+import com.ilyzs.exercisebook.TrackShowDemo;
 
 import butterknife.BindView;
 
@@ -28,9 +29,6 @@ import butterknife.BindView;
 public class BaseActivity extends AppCompatActivity implements BaseView{
 
     private ProgressDialog progressDialog;
-
-    @BindView(R.id.nav_view)
-    NavigationView navigationView;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -48,6 +46,8 @@ public class BaseActivity extends AppCompatActivity implements BaseView{
             startActivity(new Intent(this, ScrollingActivity.class));
         }else if(id == R.id.action_navigation_drawer && !(this instanceof NavigationDrawerActivity)){
             startActivity(new Intent(this, NavigationDrawerActivity.class));
+        }else if(id == R.id.action_baidu && !(this instanceof TrackShowDemo)){
+            startActivity(new Intent(this, TrackShowDemo.class));
         }
 
         return super.onOptionsItemSelected(item);

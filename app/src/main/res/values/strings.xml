@@ -90,13 +90,14 @@
         "when a user tries to pick up one of cards.\n\n"
     </string>
     <string name="action_settings">Settings</string>
-    <string name="title_activity_scroll">ScrollingActivity</string>
+    <string name="title_activity_scroll">Baidu Map</string>
     <string name="section_format">Hello World from section: %1$d</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="action_main">Index</string>
     <string name="action_scoll">Scoll Demo</string>
+    <string name="action_baidu">BaiduMap Demo</string>
     <string name="notice">通知</string>
     <string name="market">市场</string>
     <string name="idea">想法</string>
