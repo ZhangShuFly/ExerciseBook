@@ -45,6 +45,7 @@ import butterknife.Unbinder;
 public class ListFragment extends BaseFragment<ImageDataPresenter> implements ImageDataView<Map<String,String>>{
     private static final String ARG_SECTION_NUMBER = "section_number";
     private Unbinder unbinder;
+    
     private RecyclerViewAdapter adapter;
     private static List<Map<String,String>> list;
 
